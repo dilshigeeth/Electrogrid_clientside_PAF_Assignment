@@ -134,4 +134,35 @@ String query = " insert into bills (`billID`,`billNo`,`billName`,`billPrice`,`bi
 		 }
 		 return output;
 		 }
+		
+		//delete
+				public String deleteBill(String billID)
+				 {
+				 String output = "";
+				 try
+				 {
+				 Connection con = connect();
+				 if (con == null)
+				 {
+				 return "Error while connecting to the database for deleting.";
+				 }
+				 // create a prepared statement
+				 String query = "delete from bills where billID=?";
+				 PreparedStatement preparedStmt = con.prepareStatement(query);
+				 // binding values
+				 preparedStmt.setInt(1, Integer.parseInt(billID));
+				 // execute the statement
+				 preparedStmt.execute();
+				 con.close();
+				 String newBills = readBills();
+				 output = "{\"status\":\"success\", \"data\": \"" +
+				 newBills + "\"}";
+				 }
+				 catch (Exception e)
+				 {
+				 output = "{\"status\":\"error\", \"data\": \"Error while deleting the bill.\"}";
+				 System.err.println(e.getMessage());
+				 }
+				 return output;
+				 }
 		}
