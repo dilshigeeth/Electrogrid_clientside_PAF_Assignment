@@ -8,7 +8,7 @@ private Connection connect()
  try
  {
  Class.forName("com.mysql.jdbc.Driver");
- con = DriverManager.getConnection("jdbc:mysql://localhost:3306/electrogrid", "root", "");
+ con = DriverManager.getConnection("jdbc:mysql://localhost:3306/clientside_electrogrid", "root", "");
  }
  catch (Exception e)
  {
