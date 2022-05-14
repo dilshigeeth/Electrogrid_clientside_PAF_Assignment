@@ -1,5 +1,68 @@
 package com;
+import java.sql.*;
+public class Bill
+{
+private Connection connect()
+ {
+ Connection con = null;
+ try
+ {
+ Class.forName("com.mysql.jdbc.Driver");
+ con = DriverManager.getConnection("jdbc:mysql://localhost:3306/electrogrid", "root", "");
+ }
+ catch (Exception e)
+ {
+ e.printStackTrace();
+ }
+ return con;
+ }
 
-public class Bill {
+//read
+public String readBills()
+ {
+ String output = "";
+ try
+ {
+ Connection con = connect();
+ if (con == null)
+ {
+ return "Error while connecting to the database for reading.";
+ }
+ // Prepare the html table to be displayed
+ output = "<table border='1'><tr><th>Bill No</th> <th>Bill Name</th><th>Bill Price</th>" + "<th>Bill Month</th> <th>Update</th><th>Remove</th></tr>";
+ String query = "select * from bills";
+ Statement stmt = con.createStatement();
+ ResultSet rs = stmt.executeQuery(query);
+ // iterate through the rows in the result set
+ while (rs.next())
+ {
+ String billID = Integer.toString(rs.getInt("billID"));
+ String billNo = rs.getString("billNo"); 
+ String billName = rs.getString("billName");
+ String billPrice = Double.toString(
+ rs.getDouble("billPrice"));
+ String billMonth = rs.getString("billMonth");
+ // Add into the html table
+output += "<tr><td><input id='hidBillIDUpdate' name='hidBillIDUpdate' type='hidden' value='" + billID
+ + "'>" + billNo + "</td>";
+ output += "<td>" + billName + "</td>";
+ output += "<td>" + billPrice + "</td>";
+ output += "<td>" + billMonth + "</td>";
+ // buttons
+output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>" + "<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-billid='"
+ + billID + "'>" + "</td></tr>";
+ }
+ con.close();
+ // Complete the html table
+ output += "</table>";
+ }
+ catch (Exception e)
+ {
+ output = "Error while reading the bills.";
+ System.err.println(e.getMessage());
+ }
+ return output;
+ }
 
-}
+
+		}
