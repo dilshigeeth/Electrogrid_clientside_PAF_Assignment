@@ -64,5 +64,39 @@ output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUp
  return output;
  }
 
-
+//insert
+public String insertBill(String no, String name, String price, String month)
+{
+String output = "";
+try
+{
+Connection con = connect();
+if (con == null)
+{
+return "Error while connecting to the database for inserting.";
+}
+// create a prepared statement
+String query = " insert into bills (`billID`,`billNo`,`billName`,`billPrice`,`billMonth`)"
++ " values (?, ?, ?, ?, ?)";
+		 PreparedStatement preparedStmt = con.prepareStatement(query);
+		 // binding values
+		 preparedStmt.setInt(1, 0);
+		 preparedStmt.setString(2, no);
+		 preparedStmt.setString(3, name);
+		 preparedStmt.setDouble(4, Double.parseDouble(price));
+		 preparedStmt.setString(5, month);
+		 // execute the statement
+		 preparedStmt.execute();
+		 con.close();
+		 String newBills = readBills();
+		 output = "{\"status\":\"success\", \"data\": \"" +
+		 newBills + "\"}";
+		 }
+		 catch (Exception e)
+		 {
+		 output = "{\"status\":\"error\", \"data\":	 \"Error while inserting the bill.\"}";
+		 System.err.println(e.getMessage());
+		 }
+		 return output;
+		 }
 		}
