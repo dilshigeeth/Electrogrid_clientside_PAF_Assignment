@@ -99,4 +99,39 @@ String query = " insert into bills (`billID`,`billNo`,`billName`,`billPrice`,`bi
 		 }
 		 return output;
 		 }
+
+		//update
+		public String updateBill(String ID, String no, String name,
+		 String price, String month)
+		 {
+		 String output = "";
+		 try
+		 {
+		 Connection con = connect();
+		 if (con == null)
+		 {
+		 return "Error while connecting to the database for updating.";
+		 }
+		 // create a prepared statement
+		 String query = "UPDATE bills SET billNo=?,billName=?,billPrice=?,billMonth=? WHERE billID=?";
+		 PreparedStatement preparedStmt = con.prepareStatement(query);
+		 // binding values
+		 preparedStmt.setString(1, no);
+		 preparedStmt.setString(2, name);
+		 preparedStmt.setDouble(3, Double.parseDouble(price));
+		 preparedStmt.setString(4, month);
+		 preparedStmt.setInt(5, Integer.parseInt(ID));
+		// execute the statement
+		 preparedStmt.execute();
+		 con.close();
+		 String newBills = readBills();
+		 output = "{\"status\":\"success\", \"data\": \"" + newBills + "\"}";
+		 }
+		 catch (Exception e)
+		 {
+		 output = "{\"status\":\"error\", \"data\": \"Error while updating the bill.\"}";
+		 System.err.println(e.getMessage());
+		 }
+		 return output;
+		 }
 		}
